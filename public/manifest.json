@@ -1,0 +1,25 @@
+{
+  "name": "Ishonasizmi? — MIL tahlil vositasi",
+  "short_name": "Ishonasizmi?",
+  "description": "Shubhali xabar yoki postni tahlil qiling — ishontirish usullarini toping. UNESCO Youth Hackathon 2026 loyihasi.",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#18181b",
+  "orientation": "portrait",
+  "lang": "uz",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" },
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "maskable" }
+  ],
+  "share_target": {
+    "action": "/",
+    "method": "GET",
+    "params": {
+      "title": "t",
+      "text": "q",
+      "url": "u"
+    }
+  }
+}

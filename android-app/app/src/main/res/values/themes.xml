@@ -1,0 +1,3 @@
+<resources>
+    <style name="Theme.Ishonasizmi" parent="Theme.AppCompat.DayNight.NoActionBar" />
+</resources>
