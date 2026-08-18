@@ -67,3 +67,4 @@ android-app/*.aab
 *.mov
 *.webm
 *.mkv
+android-app/.kotlin/
