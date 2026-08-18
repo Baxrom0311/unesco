@@ -1,60 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:fillViewport="true">
 
     <LinearLayout
-        android:id="@+id/controlPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center">
+        android:padding="20dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Ishonasizmi?"
-            android:textSize="22sp"
+            android:textSize="24sp"
             android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="Suzuvchi tugmani yoqing. Keyin istalgan ilovada shubhali matnni nusxalab (copy), tugmani bosing — avtomatik tahlil qilinadi."
-            android:textSize="14sp" />
+            android:layout_marginTop="4dp"
+            android:text="Shubhali xabar, post yoki matnni pastga joylashtiring — dezinformatsiya, manipulyatsiya va fishing belgilarini toping."
+            android:textSize="13sp"
+            android:textColor="#71717A" />
 
-        <TextView
-            android:id="@+id/statusText"
-            android:layout_width="wrap_content"
+        <!-- Suzuvchi tugma boshqaruvi -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#F4F4F5"
+            android:padding="12dp"
+            android:layout_marginTop="16dp">
+
+            <TextView
+                android:id="@+id/statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="13sp"
+                android:text="Holat: suzuvchi tugma o'chirilgan" />
+
+            <Button
+                android:id="@+id/toggleBubbleButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Suzuvchi tugmani yoqish" />
+        </LinearLayout>
+
+        <!-- Matn kiritish -->
+        <EditText
+            android:id="@+id/contentInput"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:textSize="14sp"
-            android:text="Holat: suzuvchi tugma o'chirilgan" />
+            android:minLines="4"
+            android:gravity="top|start"
+            android:hint="Masalan: &#39;Olimlar yangi texnologiya haqida shov-shuv xabar bermoqda...&#39;"
+            android:padding="12dp"
+            android:background="#FFFFFF"
+            android:inputType="textMultiLine" />
 
         <Button
-            android:id="@+id/toggleBubbleButton"
+            android:id="@+id/analyzeButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Tahlil qilish" />
+
+        <ProgressBar
+            android:id="@+id/loadingIndicator"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="12dp"
-            android:text="Suzuvchi tugmani yoqish" />
+            android:visibility="gone" />
 
-        <Button
-            android:id="@+id/openAppButton"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/errorText"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="To'liq ilovani ochish" />
+            android:layout_marginTop="10dp"
+            android:textColor="#DC2626"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <FrameLayout
+            android:id="@+id/resultContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" />
+
     </LinearLayout>
-
-    <WebView
-        android:id="@+id/webView"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone" />
-
-</LinearLayout>
+</ScrollView>

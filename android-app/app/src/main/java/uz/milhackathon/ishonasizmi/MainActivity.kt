@@ -8,21 +8,26 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.View
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.Button
+import android.widget.EditText
+import android.widget.FrameLayout
+import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import java.net.URLEncoder
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var webView: WebView
-    private lateinit var controlPanel: View
     private lateinit var statusText: TextView
     private lateinit var toggleBubbleButton: Button
+    private lateinit var contentInput: EditText
+    private lateinit var analyzeButton: Button
+    private lateinit var loadingIndicator: ProgressBar
+    private lateinit var errorText: TextView
+    private lateinit var resultContainer: FrameLayout
 
     private var bubbleRunning = false
 
@@ -33,18 +38,16 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        webView = findViewById(R.id.webView)
-        controlPanel = findViewById(R.id.controlPanel)
         statusText = findViewById(R.id.statusText)
         toggleBubbleButton = findViewById(R.id.toggleBubbleButton)
-        val openAppButton: Button = findViewById(R.id.openAppButton)
-
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.webViewClient = WebViewClient()
+        contentInput = findViewById(R.id.contentInput)
+        analyzeButton = findViewById(R.id.analyzeButton)
+        loadingIndicator = findViewById(R.id.loadingIndicator)
+        errorText = findViewById(R.id.errorText)
+        resultContainer = findViewById(R.id.resultContainer)
 
         toggleBubbleButton.setOnClickListener { onToggleBubbleClicked() }
-        openAppButton.setOnClickListener { showWebView(BASE_URL) }
+        analyzeButton.setOnClickListener { runAnalysis(contentInput.text.toString()) }
 
         handleIncomingIntent(intent)
     }
@@ -64,22 +67,47 @@ class MainActivity : AppCompatActivity() {
         val text = when {
             intent?.action == Intent.ACTION_SEND && intent.type == "text/plain" ->
                 intent.getStringExtra(Intent.EXTRA_TEXT)
-            // Matn boshqa ilovada belgilanganda (select), "qo'shimcha imkoniyatlar"
-            // panelidan bizning ilova tanlansa, shu yerga tushadi
             intent?.action == Intent.ACTION_PROCESS_TEXT ->
                 intent.getCharSequenceExtra(Intent.EXTRA_PROCESS_TEXT)?.toString()
             else -> null
         }
         if (!text.isNullOrBlank()) {
-            val encoded = URLEncoder.encode(text, "UTF-8")
-            showWebView("$BASE_URL/?q=$encoded")
+            contentInput.setText(text)
+            runAnalysis(text)
         }
     }
 
-    private fun showWebView(url: String) {
-        controlPanel.visibility = View.GONE
-        webView.visibility = View.VISIBLE
-        webView.loadUrl(url)
+    private fun runAnalysis(text: String) {
+        val trimmed = text.trim()
+        if (trimmed.length < 3) {
+            showError("Iltimos, tahlil qilish uchun matn kiriting")
+            return
+        }
+
+        errorText.visibility = View.GONE
+        resultContainer.removeAllViews()
+        loadingIndicator.visibility = View.VISIBLE
+        analyzeButton.isEnabled = false
+
+        lifecycleScope.launch {
+            when (val outcome = AnalyzeApi.analyze(trimmed)) {
+                is AnalyzeOutcome.Success -> {
+                    val view = AnalysisResultView(this@MainActivity)
+                    view.render(trimmed, outcome.result)
+                    resultContainer.addView(view)
+                }
+                is AnalyzeOutcome.Failure -> showError(outcome.message)
+            }
+            loadingIndicator.visibility = View.GONE
+            analyzeButton.isEnabled = true
+        }
+    }
+
+    private fun showError(message: String) {
+        errorText.text = message
+        errorText.visibility = View.VISIBLE
+        loadingIndicator.visibility = View.GONE
+        analyzeButton.isEnabled = true
     }
 
     private fun onToggleBubbleClicked() {
@@ -134,9 +162,5 @@ class MainActivity : AppCompatActivity() {
             "Holat: suzuvchi tugma o'chirilgan"
         }
         toggleBubbleButton.text = if (bubbleRunning) "O'chirish" else "Suzuvchi tugmani yoqish"
-    }
-
-    companion object {
-        private const val BASE_URL = "https://unesco-cyan.vercel.app"
     }
 }

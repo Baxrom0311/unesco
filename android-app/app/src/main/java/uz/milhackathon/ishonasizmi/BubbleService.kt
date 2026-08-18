@@ -6,6 +6,7 @@ import android.app.Service
 import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ServiceInfo
 import android.graphics.Color
 import android.graphics.PixelFormat
 import android.os.Build
@@ -15,16 +16,18 @@ import android.view.KeyEvent
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.WindowManager
-import android.webkit.WebView
-import android.webkit.WebViewClient
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.ProgressBar
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
-import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
-import java.net.URLEncoder
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import kotlin.math.hypot
 
 class BubbleService : Service() {
@@ -35,6 +38,9 @@ class BubbleService : Service() {
     private lateinit var bubbleParams: WindowManager.LayoutParams
 
     private var cardView: FrameLayout? = null
+
+    private val serviceJob = Job()
+    private val serviceScope = CoroutineScope(Dispatchers.Main + serviceJob)
 
     override fun onCreate() {
         super.onCreate()
@@ -161,25 +167,29 @@ class BubbleService : Service() {
         showCard(clipText)
     }
 
-    // ---------- Natija kartasi (alohida oyna EMAS, joriy ilova ustida karta) ----------
+    // ---------- Natija kartasi (alohida oyna EMAS, joriy ilova ustida karta, to'liq native) ----------
 
     private fun showCard(text: String) {
         val density = resources.displayMetrics.density
+
         val container = FrameLayout(this)
         container.setBackgroundColor(Color.WHITE)
         container.elevation = 24f * density
 
-        val webView = WebView(this)
-        webView.settings.javaScriptEnabled = true
-        webView.settings.domStorageEnabled = true
-        webView.webViewClient = WebViewClient()
-        container.addView(
-            webView,
-            FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.MATCH_PARENT,
-                FrameLayout.LayoutParams.MATCH_PARENT
-            )
+        val scroll = ScrollView(this)
+        scroll.layoutParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.MATCH_PARENT,
+            FrameLayout.LayoutParams.MATCH_PARENT
         )
+        container.addView(scroll)
+
+        val progress = ProgressBar(this)
+        val progressParams = FrameLayout.LayoutParams(
+            FrameLayout.LayoutParams.WRAP_CONTENT,
+            FrameLayout.LayoutParams.WRAP_CONTENT
+        )
+        progressParams.gravity = Gravity.CENTER
+        container.addView(progress, progressParams)
 
         val closeButton = TextView(this)
         closeButton.text = "✕"
@@ -230,8 +240,29 @@ class BubbleService : Service() {
         container.requestFocus()
         cardView = container
 
-        val encoded = URLEncoder.encode(text, "UTF-8")
-        webView.loadUrl("$BASE_URL/?q=$encoded")
+        serviceScope.launch {
+            when (val outcome = AnalyzeApi.analyze(text)) {
+                is AnalyzeOutcome.Success -> {
+                    progress.visibility = android.view.View.GONE
+                    val resultView = AnalysisResultView(this@BubbleService)
+                    resultView.render(text, outcome.result)
+                    scroll.addView(resultView)
+                }
+                is AnalyzeOutcome.Failure -> {
+                    progress.visibility = android.view.View.GONE
+                    val errorView = TextView(this@BubbleService)
+                    errorView.text = outcome.message
+                    errorView.setTextColor(Color.parseColor("#DC2626"))
+                    errorView.setPadding(
+                        (16 * density).toInt(),
+                        (16 * density).toInt(),
+                        (16 * density).toInt(),
+                        (16 * density).toInt()
+                    )
+                    scroll.addView(errorView)
+                }
+            }
+        }
     }
 
     private fun removeCard() {
@@ -247,6 +278,7 @@ class BubbleService : Service() {
 
     override fun onDestroy() {
         super.onDestroy()
+        serviceJob.cancel()
         removeCard()
         bubbleView?.let {
             try {
@@ -256,9 +288,5 @@ class BubbleService : Service() {
             }
         }
         bubbleView = null
-    }
-
-    companion object {
-        private const val BASE_URL = "https://unesco-cyan.vercel.app"
     }
 }
