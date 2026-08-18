@@ -1,6 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
+import { createOpenAI } from "@ai-sdk/openai";
 import { generateObject } from "ai";
 import { z } from "zod";
+
+// Direct OpenAI provider (not Vercel AI Gateway) — works on any host, not
+// just Vercel. Requires OPENAI_API_KEY in the environment.
+const openai = createOpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+});
 
 export const maxDuration = 30;
 
@@ -98,7 +105,7 @@ export async function POST(req: NextRequest) {
 
   try {
     const { object } = await generateObject({
-      model: "openai/gpt-4o-mini",
+      model: openai("gpt-4o-mini"),
       schema: resultSchema,
       system: SYSTEM_PROMPT,
       prompt: `Quyidagi kontentning USLUBINI va TUZILISHINI tahlil qiling (voqeaning haqiqatligi haqida hukm chiqarmang):\n\n"""\n${content}\n"""`,

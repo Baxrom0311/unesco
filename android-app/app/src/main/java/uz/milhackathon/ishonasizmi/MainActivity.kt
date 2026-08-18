@@ -1,6 +1,8 @@
 package uz.milhackathon.ishonasizmi
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
@@ -10,7 +12,9 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.Button
 import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import java.net.URLEncoder
 
 class MainActivity : AppCompatActivity() {
@@ -21,6 +25,9 @@ class MainActivity : AppCompatActivity() {
     private lateinit var toggleBubbleButton: Button
 
     private var bubbleRunning = false
+
+    private val notificationPermissionLauncher =
+        registerForActivityResult(ActivityResultContracts.RequestPermission()) { /* no-op either way */ }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -89,10 +96,22 @@ class MainActivity : AppCompatActivity() {
             stopService(Intent(this, BubbleService::class.java))
             bubbleRunning = false
         } else {
-            startService(Intent(this, BubbleService::class.java))
+            requestNotificationPermissionIfNeeded()
+            ContextCompat.startForegroundService(this, Intent(this, BubbleService::class.java))
             bubbleRunning = true
         }
         updateStatus()
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.TIRAMISU) return
+        val granted = ContextCompat.checkSelfPermission(
+            this,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) == PackageManager.PERMISSION_GRANTED
+        if (!granted) {
+            notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 
     private fun hasOverlayPermission(): Boolean {

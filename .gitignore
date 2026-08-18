@@ -55,3 +55,15 @@ android-app/*.apk
 android-app/*.aab
 android-app/*.jks
 android-app/*.keystore
+android-app/keystore.properties
+android-app/app/*.jks
+android-app/app/*.keystore
+android-app/app/keystore.properties
+android-app/gradlew.log
+android-app/*.aab
+
+# large video files (host on YouTube/Drive, not in the repo)
+*.mp4
+*.mov
+*.webm
+*.mkv

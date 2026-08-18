@@ -9,7 +9,7 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@ai-sdk/gateway": "^4.0.51",
+    "@ai-sdk/openai": "^4.0.42",
     "ai": "^7.0.64",
     "next": "16.3.0",
     "react": "19.2.8",

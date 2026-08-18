@@ -21,7 +21,9 @@ import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import android.content.pm.ServiceInfo
 import androidx.core.app.NotificationCompat
+import androidx.core.app.ServiceCompat
 import java.net.URLEncoder
 import kotlin.math.hypot
 
@@ -60,7 +62,12 @@ class BubbleService : Service() {
             .setSmallIcon(android.R.drawable.ic_menu_view)
             .setPriority(NotificationCompat.PRIORITY_MIN)
             .build()
-        startForeground(1, notification)
+        ServiceCompat.startForeground(
+            this,
+            1,
+            notification,
+            ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+        )
     }
 
     // ---------- Suzuvchi tugma ----------
