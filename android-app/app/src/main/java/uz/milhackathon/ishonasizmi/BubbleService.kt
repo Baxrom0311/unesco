@@ -56,14 +56,14 @@ class BubbleService : Service() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Ishonasizmi? xizmati",
+                "Trust Signal xizmati",
                 NotificationManager.IMPORTANCE_MIN
             )
             val manager = getSystemService(NotificationManager::class.java)
             manager.createNotificationChannel(channel)
         }
         val notification = NotificationCompat.Builder(this, channelId)
-            .setContentTitle("Ishonasizmi? fon rejimida ishlayapti")
+            .setContentTitle("Trust Signal fon rejimida ishlayapti")
             .setContentText("Matnni nusxalab, suzuvchi tugmani bosing")
             .setSmallIcon(android.R.drawable.ic_menu_view)
             .setPriority(NotificationCompat.PRIORITY_MIN)
