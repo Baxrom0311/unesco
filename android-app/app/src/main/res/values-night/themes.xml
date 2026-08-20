@@ -1,15 +1,12 @@
 <resources>
-    <!-- DayNight: tizim light/dark rejimiga avtomatik moslashadi.
-         Barcha ranglar @color orqali — values/ va values-night/ juftligidan olinadi. -->
     <style name="Theme.TrustSignal" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/bg_app</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/bgBottom</item>
-        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowLightStatusBar">false</item>
         <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textPrimary</item>
         <item name="android:textColorHighlight">#33888888</item>
-        <!-- OEM'ning majburiy qoraytirishi ranglarimizni buzmasin (API 29+) -->
         <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>

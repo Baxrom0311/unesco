@@ -1,0 +1,45 @@
+<resources>
+    <!-- Liquid glass palitra — DARK -->
+    <color name="bgTop">#10131A</color>
+    <color name="bgBottom">#161A22</color>
+    <color name="bgTint1">#1F0A84FF</color>
+    <color name="bgTintEnd1">#000A84FF</color>
+    <color name="bgTint2">#145E5CE6</color>
+    <color name="bgTintEnd2">#005E5CE6</color>
+
+    <color name="glassTop">#1FFFFFFF</color>
+    <color name="glassFill">#1AFFFFFF</color>
+    <color name="glassStroke">#33FFFFFF</color>
+    <color name="fieldBg">#12FFFFFF</color>
+    <color name="chipBg">#14FFFFFF</color>
+    <color name="overlayCardBg">#E6101318</color>
+
+    <color name="textPrimary">#F2F4F8</color>
+    <color name="textSecondary">#9EEBEBF5</color>
+    <color name="textTertiary">#98A0AB</color>
+
+    <color name="accent">#0A84FF</color>
+    <color name="accentFg">#FFFFFF</color>
+
+    <color name="error">#FF8A93</color>
+    <color name="errorBg">#33C6283C</color>
+
+    <color name="badgeOkBg">#26177A45</color>
+    <color name="badgeOkFg">#7BD8A0</color>
+    <color name="badgeWarnBg">#26B8860B</color>
+    <color name="badgeWarnFg">#F0C24B</color>
+    <color name="badgeDangerBg">#26D93025</color>
+    <color name="badgeDangerFg">#FF9B92</color>
+
+    <color name="hlManipBg">#4A3A12</color>
+    <color name="hlManipFg">#FFD886</color>
+    <color name="hlPhishBg">#4A1F1C</color>
+    <color name="hlPhishFg">#FFB4AE</color>
+    <color name="glassSheen">#17FFFFFF</color>
+    <color name="glassEdgeLight">#59FFFFFF</color>
+    <color name="textHint">#8B93A0</color>
+    <color name="accentIcon">#66A8FF</color>
+    <color name="tonalBtnBg">#260A84FF</color>
+    <color name="tonalBtnStroke">#3364A8FF</color>
+    <color name="tonalBtnFg">#64A8FF</color>
+</resources>

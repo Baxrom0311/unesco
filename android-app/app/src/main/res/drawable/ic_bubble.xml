@@ -1,24 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="48dp"
-    android:height="48dp"
-    android:viewportWidth="48"
-    android:viewportHeight="48">
-    <path
-        android:pathData="M24,24m-24,0a24,24 0,1 1,48 0a24,24 0,1 1,-48 0"
-        android:fillColor="#18181B" />
-    <path
-        android:pathData="M24,10 L36,15 L36,24 C36,32 30,37 24,40 C18,37 12,32 12,24 L12,15 Z"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.2"
-        android:fillColor="#00000000" />
-    <path
-        android:pathData="M20,25 m-5,0 a5,5 0 1,0 10,0 a5,5 0 1,0 -10,0"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.2"
-        android:fillColor="#00000000" />
-    <path
-        android:pathData="M24,29 L29,34"
-        android:strokeColor="#FFFFFF"
-        android:strokeWidth="2.2"
-        android:strokeLineCap="round" />
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="56dp" android:height="56dp"
+    android:viewportWidth="56" android:viewportHeight="56">
+    <!-- Shisha-ko'k doira -->
+    <path android:pathData="M28,28 m-26,0 a26,26 0 1,1 52,0 a26,26 0 1,1 -52,0">
+        <aapt:attr name="android:fillColor">
+            <gradient android:type="linear"
+                android:startX="28" android:startY="2"
+                android:endX="28" android:endY="54"
+                android:startColor="#2E96FF" android:endColor="#0A6AE8" />
+        </aapt:attr>
+    </path>
+    <!-- Tepa yorug'lik aksi -->
+    <path android:fillColor="#33FFFFFF"
+        android:pathData="M28,5 a23,23 0 0 1 23,23 a30,13 0 0 0 -46,0 a23,23 0 0 1 23,-23z" />
+    <path android:strokeColor="#59FFFFFF" android:strokeWidth="1.2" android:fillColor="#00000000"
+        android:pathData="M28,28 m-25.4,0 a25.4,25.4 0 1,1 50.8,0 a25.4,25.4 0 1,1 -50.8,0" />
+    <!-- Xabar pufagi (oq) -->
+    <path android:fillColor="#FFFFFF"
+        android:pathData="M20,15 H36 A6,6 0 0 1 42,21 V31 A6,6 0 0 1 36,37 H26 L18,43 L20,37 A6,6 0 0 1 14,31 V21 A6,6 0 0 1 20,15 Z" />
+    <!-- Lupa (ko'k) -->
+    <path android:strokeColor="#0A6AE8" android:strokeWidth="2.6" android:fillColor="#00000000"
+        android:pathData="M26,24.5 m-4.8,0 a4.8,4.8 0 1,1 9.6,0 a4.8,4.8 0 1,1 -9.6,0" />
+    <path android:strokeColor="#0A6AE8" android:strokeWidth="2.6" android:strokeLineCap="round" android:fillColor="#00000000"
+        android:pathData="M29.6,28.1 L34,32.5" />
 </vector>

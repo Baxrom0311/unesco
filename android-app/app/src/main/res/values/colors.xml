@@ -1,3 +1,49 @@
 <resources>
-    <color name="ic_launcher_background">#18181B</color>
+    <color name="ic_launcher_background">#0A7CFF</color>
+
+    <!-- Liquid glass palitra — LIGHT. values-night/ da dark juftligi bor. -->
+    <color name="bgTop">#F6F8FB</color>
+    <color name="bgBottom">#EBEFF6</color>
+    <color name="bgTint1">#66D7E3F6</color>
+    <color name="bgTintEnd1">#00D7E3F6</color>
+    <color name="bgTint2">#59F2EDE2</color>
+    <color name="bgTintEnd2">#00F2EDE2</color>
+
+    <!-- Shisha sirtlar: shaffof oq qatlamlar -->
+    <color name="glassTop">#E8FFFFFF</color>
+    <color name="glassFill">#D9FFFFFF</color>
+    <color name="glassStroke">#14152A43</color>
+    <color name="fieldBg">#96FFFFFF</color>
+    <color name="chipBg">#D9FFFFFF</color>
+    <color name="overlayCardBg">#EDFDFDFE</color>
+
+    <color name="textPrimary">#10131F</color>
+    <color name="textSecondary">#A30B1220</color>
+    <color name="textTertiary">#5F6975</color>
+
+    <!-- Yagona nafis aksent -->
+    <color name="accent">#0A7CFF</color>
+    <color name="accentFg">#FFFFFF</color>
+
+    <color name="error">#C6283C</color>
+    <color name="errorBg">#F7E3E6</color>
+
+    <color name="badgeOkBg">#DCF2E4</color>
+    <color name="badgeOkFg">#177A45</color>
+    <color name="badgeWarnBg">#FBF0D4</color>
+    <color name="badgeWarnFg">#8A5F00</color>
+    <color name="badgeDangerBg">#FBE2E0</color>
+    <color name="badgeDangerFg">#B3261E</color>
+
+    <color name="hlManipBg">#FFE9BE</color>
+    <color name="hlManipFg">#6E4700</color>
+    <color name="hlPhishBg">#FFDBDB</color>
+    <color name="hlPhishFg">#8C1D18</color>
+    <color name="glassSheen">#8CFFFFFF</color>
+    <color name="glassEdgeLight">#00FFFFFF</color>
+    <color name="textHint">#6B7380</color>
+    <color name="accentIcon">#0A7CFF</color>
+    <color name="tonalBtnBg">#140A7CFF</color>
+    <color name="tonalBtnStroke">#2E0A7CFF</color>
+    <color name="tonalBtnFg">#0A7CFF</color>
 </resources>

@@ -13,17 +13,17 @@ if (hasReleaseSigning) {
 }
 
 android {
-    namespace 'uz.milhackathon.ishonasizmi'
+    namespace 'uz.trustsignal.app'
     compileSdk 36
 
     defaultConfig {
-        applicationId "uz.milhackathon.ishonasizmi"
+        applicationId "uz.trustsignal.app"
         minSdk 24
         targetSdk 36
         // versionCode/versionName: bump both on every release build submitted to Play.
         // Convention: versionCode = YYMMDDN (date + same-day counter), versionName = semver.
-        versionCode 2608170
-        versionName "1.0.0"
+        versionCode 2608203
+        versionName "1.5.0"
     }
 
     signingConfigs {

@@ -1,72 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:fitsSystemWindows="true"
+    android:scrollbars="none">
 
     <LinearLayout
+        android:id="@+id/contentColumn"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="32dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Trust Signal"
-            android:textSize="24sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Shubhali xabar, post yoki matnni pastga joylashtiring — dezinformatsiya, manipulyatsiya va fishing belgilarini toping."
-            android:textSize="13sp"
-            android:textColor="#71717A" />
-
-        <!-- Suzuvchi tugma boshqaruvi -->
+        <!-- Sarlavha -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="#F4F4F5"
-            android:padding="12dp"
-            android:layout_marginTop="16dp">
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
 
-            <TextView
-                android:id="@+id/statusText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="13sp"
-                android:text="Holat: suzuvchi tugma o'chirilgan" />
+            <ImageView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:src="@drawable/ic_bubble"
+                android:contentDescription="Trust Signal" />
 
-            <Button
-                android:id="@+id/toggleBubbleButton"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Suzuvchi tugmani yoqish" />
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trust Signal"
+                    android:textSize="28sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/textPrimary"
+                    android:letterSpacing="-0.02" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Media savodxonligi yordamchisi"
+                    android:textSize="14sp"
+                    android:textColor="@color/textSecondary" />
+            </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="Shubhali kontentni tekshiring — dezinformatsiya, manipulyatsiya va fishing belgilarini ko'rsatib beradi. Rost/yolg'onga hukm chiqarmaydi."
+            android:textSize="15sp"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/textSecondary" />
 
         <!-- Matn kiritish -->
         <EditText
             android:id="@+id/contentInput"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:minLines="4"
             android:gravity="top|start"
-            android:hint="Masalan: &#39;Olimlar yangi texnologiya haqida shov-shuv xabar bermoqda...&#39;"
-            android:padding="12dp"
-            android:background="#FFFFFF"
+            android:hint="Matn, xabar, guruhdan 10-15 xabar yoki maqola havolasini shu yerga tashlang..."
+            android:padding="18dp"
+            android:background="@drawable/glass_field"
+            android:textColor="@color/textPrimary"
+            android:textColorHint="@color/textHint"
+            android:textCursorDrawable="@null"
+            android:textSize="15sp"
+            android:lineSpacingExtra="3dp"
             android:inputType="textMultiLine" />
 
         <Button
             android:id="@+id/analyzeButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:minHeight="56dp"
+            android:paddingTop="14dp"
+            android:paddingBottom="14dp"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/btn_primary"
+            android:textColor="@color/accentFg"
+            android:fontFamily="sans-serif-medium"
+            android:textSize="17sp"
+            android:elevation="6dp"
+            android:outlineSpotShadowColor="#660A7CFF"
+            android:outlineAmbientShadowColor="#330A7CFF"
+            android:textAllCaps="false"
+            android:stateListAnimator="@animator/press_scale"
             android:text="Tahlil qilish" />
 
         <ProgressBar
@@ -74,23 +109,283 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="18dp"
+            android:indeterminateTint="@color/textPrimary"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/errorText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:textColor="#DC2626"
+            android:layout_marginTop="14dp"
+            android:textColor="@color/error"
             android:textSize="13sp"
+            android:background="@drawable/glass_field"
+            android:padding="14dp"
             android:visibility="gone" />
 
         <FrameLayout
             android:id="@+id/resultContainer"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp" />
+            android:layout_marginTop="18dp" />
+
+        <!-- Imkoniyatlar -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Nimalarni tekshira oladi"
+            android:textSize="17sp"
+            android:fontFamily="sans-serif-medium"
+            android:textColor="@color/textPrimary" />
+
+                <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/glass_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/icon_chip_accent"
+                android:padding="11dp"
+                android:src="@drawable/ic_doc_text"
+                android:contentDescription="Matn va guruh xabarlari"
+                app:tint="@color/accentIcon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Matn va guruh xabarlari"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/textPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Yozing yoki joylang — 10-15 xabarni birga tashlash mumkin"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/glass_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/icon_chip_accent"
+                android:padding="11dp"
+                android:src="@drawable/ic_camera"
+                android:contentDescription="Skrinshot va QR-kod"
+                app:tint="@color/accentIcon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Skrinshot va QR-kod"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/textPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Rasmni «Ulashish» orqali yuboring"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/glass_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/icon_chip_accent"
+                android:padding="11dp"
+                android:src="@drawable/ic_mic"
+                android:contentDescription="Ovozli xabar"
+                app:tint="@color/accentIcon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Ovozli xabar"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/textPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Audio xabarni «Ulashish» orqali yuboring"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:background="@drawable/glass_card"
+            android:padding="16dp"
+            android:layout_marginTop="10dp">
+
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_height="46dp"
+                android:background="@drawable/icon_chip_accent"
+                android:padding="11dp"
+                android:src="@drawable/ic_link"
+                android:contentDescription="Maqola havolasi"
+                app:tint="@color/accentIcon" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Maqola havolasi"
+                    android:textSize="15sp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textColor="@color/textPrimary" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Sahifani yuklab, clickbait belgilarini topadi"
+                    android:textSize="13sp"
+                    android:textColor="@color/textSecondary" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Suzuvchi tugma -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/glass_card"
+            android:padding="18dp"
+            android:layout_marginTop="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/icon_chip"
+                    android:padding="9dp"
+                    android:src="@drawable/ic_bolt"
+                    android:contentDescription="Suzuvchi tugma"
+                    app:tint="@color/accentIcon" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="12dp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Suzuvchi tugma"
+                        android:textSize="14sp"
+                        android:fontFamily="sans-serif-medium"
+                        android:textColor="@color/textPrimary" />
+
+                    <TextView
+                        android:id="@+id/statusText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="12sp"
+                        android:textColor="@color/textTertiary"
+                        android:text="Holat: o'chirilgan" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="Istalgan ilovada matnni nusxalab, suzuvchi tugmani bossangiz — natija shu yerning o'zida chiqadi."
+                android:textSize="13sp"
+                android:lineSpacingExtra="3dp"
+                android:textColor="@color/textSecondary" />
+
+            <Button
+                android:id="@+id/toggleBubbleButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="46dp"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/btn_outline"
+                android:textColor="@color/tonalBtnFg"
+                android:fontFamily="sans-serif-medium"
+                android:textSize="17sp"
+                android:textAllCaps="false"
+                android:stateListAnimator="@animator/press_scale"
+                android:text="Yoqish" />
+        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>
