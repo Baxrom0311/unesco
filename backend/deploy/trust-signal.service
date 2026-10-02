@@ -1,0 +1,25 @@
+[Unit]
+Description=Trust Signal API
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=trustsignal
+Group=trustsignal
+WorkingDirectory=/opt/trust-signal/backend
+EnvironmentFile=/opt/trust-signal/backend/.env
+Environment=BUDGET_DB_PATH=/var/lib/trust-signal/usage.sqlite3
+StateDirectory=trust-signal
+UMask=0077
+ExecStart=/opt/trust-signal/backend/venv/bin/uvicorn app:app --host 127.0.0.1 --port 8002 --workers 1 --proxy-headers --forwarded-allow-ips 127.0.0.1
+Restart=on-failure
+RestartSec=5
+TimeoutStopSec=60
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+
+[Install]
+WantedBy=multi-user.target

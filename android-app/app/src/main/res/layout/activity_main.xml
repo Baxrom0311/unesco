@@ -30,7 +30,7 @@
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:src="@drawable/ic_bubble"
-                android:contentDescription="Trust Signal" />
+                android:contentDescription="@string/brand_name" />
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -42,7 +42,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Trust Signal"
+                    android:text="@string/brand_name"
                     android:textSize="28sp"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/textPrimary"
@@ -52,7 +52,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="Media savodxonligi yordamchisi"
+                    android:text="@string/app_tagline"
                     android:textSize="14sp"
                     android:textColor="@color/textSecondary" />
             </LinearLayout>
@@ -62,7 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            android:text="Shubhali kontentni tekshiring — dezinformatsiya, manipulyatsiya va fishing belgilarini ko'rsatib beradi. Rost/yolg'onga hukm chiqarmaydi."
+            android:text="@string/app_description"
             android:textSize="15sp"
             android:lineSpacingExtra="4dp"
             android:textColor="@color/textSecondary" />
@@ -75,7 +75,7 @@
             android:layout_marginTop="20dp"
             android:minLines="4"
             android:gravity="top|start"
-            android:hint="Matn, xabar, guruhdan 10-15 xabar yoki maqola havolasini shu yerga tashlang..."
+            android:hint="@string/content_hint"
             android:padding="18dp"
             android:background="@drawable/glass_field"
             android:textColor="@color/textPrimary"
@@ -83,6 +83,7 @@
             android:textCursorDrawable="@null"
             android:textSize="15sp"
             android:lineSpacingExtra="3dp"
+            android:importantForAutofill="no"
             android:inputType="textMultiLine" />
 
         <Button
@@ -98,11 +99,9 @@
             android:fontFamily="sans-serif-medium"
             android:textSize="17sp"
             android:elevation="6dp"
-            android:outlineSpotShadowColor="#660A7CFF"
-            android:outlineAmbientShadowColor="#330A7CFF"
             android:textAllCaps="false"
             android:stateListAnimator="@animator/press_scale"
-            android:text="Tahlil qilish" />
+            android:text="@string/analyze_action" />
 
         <ProgressBar
             android:id="@+id/loadingIndicator"
@@ -135,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="26dp"
-            android:text="Nimalarni tekshira oladi"
+            android:text="@string/capabilities_title"
             android:textSize="17sp"
             android:fontFamily="sans-serif-medium"
             android:textColor="@color/textPrimary" />
@@ -155,7 +154,7 @@
                 android:background="@drawable/icon_chip_accent"
                 android:padding="11dp"
                 android:src="@drawable/ic_doc_text"
-                android:contentDescription="Matn va guruh xabarlari"
+                android:contentDescription="@string/text_feature_title"
                 app:tint="@color/accentIcon" />
 
             <LinearLayout
@@ -168,7 +167,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Matn va guruh xabarlari"
+                    android:text="@string/text_feature_title"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/textPrimary" />
@@ -177,7 +176,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Yozing yoki joylang — 10-15 xabarni birga tashlash mumkin"
+                    android:text="@string/text_feature_description"
                     android:textSize="13sp"
                     android:textColor="@color/textSecondary" />
             </LinearLayout>
@@ -198,7 +197,7 @@
                 android:background="@drawable/icon_chip_accent"
                 android:padding="11dp"
                 android:src="@drawable/ic_camera"
-                android:contentDescription="Skrinshot va QR-kod"
+                android:contentDescription="@string/image_feature_title"
                 app:tint="@color/accentIcon" />
 
             <LinearLayout
@@ -211,7 +210,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Skrinshot va QR-kod"
+                    android:text="@string/image_feature_title"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/textPrimary" />
@@ -220,7 +219,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Rasmni «Ulashish» orqali yuboring"
+                    android:text="@string/image_feature_description"
                     android:textSize="13sp"
                     android:textColor="@color/textSecondary" />
             </LinearLayout>
@@ -241,7 +240,7 @@
                 android:background="@drawable/icon_chip_accent"
                 android:padding="11dp"
                 android:src="@drawable/ic_mic"
-                android:contentDescription="Ovozli xabar"
+                android:contentDescription="@string/audio_feature_title"
                 app:tint="@color/accentIcon" />
 
             <LinearLayout
@@ -254,7 +253,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Ovozli xabar"
+                    android:text="@string/audio_feature_title"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/textPrimary" />
@@ -263,7 +262,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Audio xabarni «Ulashish» orqali yuboring"
+                    android:text="@string/audio_feature_description"
                     android:textSize="13sp"
                     android:textColor="@color/textSecondary" />
             </LinearLayout>
@@ -284,7 +283,7 @@
                 android:background="@drawable/icon_chip_accent"
                 android:padding="11dp"
                 android:src="@drawable/ic_link"
-                android:contentDescription="Maqola havolasi"
+                android:contentDescription="@string/article_feature_title"
                 app:tint="@color/accentIcon" />
 
             <LinearLayout
@@ -297,7 +296,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Maqola havolasi"
+                    android:text="@string/article_feature_title"
                     android:textSize="15sp"
                     android:fontFamily="sans-serif-medium"
                     android:textColor="@color/textPrimary" />
@@ -306,7 +305,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Sahifani yuklab, clickbait belgilarini topadi"
+                    android:text="@string/article_feature_description"
                     android:textSize="13sp"
                     android:textColor="@color/textSecondary" />
             </LinearLayout>
@@ -333,7 +332,7 @@
                     android:background="@drawable/icon_chip"
                     android:padding="9dp"
                     android:src="@drawable/ic_bolt"
-                    android:contentDescription="Suzuvchi tugma"
+                    android:contentDescription="@string/bubble_title"
                     app:tint="@color/accentIcon" />
 
                 <LinearLayout
@@ -346,7 +345,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Suzuvchi tugma"
+                        android:text="@string/bubble_title"
                         android:textSize="14sp"
                         android:fontFamily="sans-serif-medium"
                         android:textColor="@color/textPrimary" />
@@ -357,7 +356,7 @@
                         android:layout_height="wrap_content"
                         android:textSize="12sp"
                         android:textColor="@color/textTertiary"
-                        android:text="Holat: o'chirilgan" />
+                        android:text="@string/status_disabled" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -365,7 +364,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:text="Istalgan ilovada matnni nusxalab, suzuvchi tugmani bossangiz — natija shu yerning o'zida chiqadi."
+                android:text="@string/bubble_description"
                 android:textSize="13sp"
                 android:lineSpacingExtra="3dp"
                 android:textColor="@color/textSecondary" />
@@ -384,7 +383,7 @@
                 android:textSize="17sp"
                 android:textAllCaps="false"
                 android:stateListAnimator="@animator/press_scale"
-                android:text="Yoqish" />
+                android:text="@string/enable_action" />
         </LinearLayout>
 
     </LinearLayout>

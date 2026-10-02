@@ -1,3 +1,6 @@
+> Arxiv eslatmasi: bu UNESCO/MIL taqdimoti oldingi yo‘nalishga tegishli.
+> Joriy mahsulot kiberfiribgarlik tahliliga o‘tdi; `CYBER_LOGIC.md` va README ga qarang.
+
 % Trust Signal — Project Proposal
 % UNESCO Youth Hackathon 2026
 
@@ -46,11 +49,11 @@ We also made a deliberate call early on: our AI never declares a claim "true" or
 
 ## Prototype / Concept Design
 
-We didn't want to build another destination people have to remember to open. The main convenience we designed for is speed and ease: someone selects a suspicious message right where they already are, and Trust Signal analyzes it on the spot — no separate app to open, no switching screens, no copying text anywhere.
+We didn't want to build another destination people have to remember to open. The main convenience we designed for is speed and ease: someone selects a suspicious message right where they already are, and Trust Signal analyzes it on the spot — a direct entry from the selection menu or share sheet; the floating shortcut can show analysis over the current app after text is copied.
 
 **On Android** (built and functional), this is real, working integration at the operating-system level, not a mockup:
 
-- Registered directly in Android's own text-selection toolbar — select any text in any app, tap Trust Signal, and get an instant analysis right there
+- Registered directly in Android's own text-selection toolbar — select text in a compatible app, tap Trust Signal, and open the native analysis screen
 - A floating quick-access button that stays on screen so a single tap analyzes whatever was just copied, from inside any app
 - Share Sheet integration as an additional, familiar entry point
 
@@ -69,4 +72,4 @@ We also built true OS-level integration (text-selection toolbar, floating button
 
 ## Practical Feasibility & Long-Term Viability
 
-We didn't just design this — we built and shipped it. The web app is live in production today, and our Android app builds and installs successfully. We kept the architecture intentionally lightweight, with a single AI-analysis endpoint that both our web and Android clients share, which keeps our hosting and maintenance costs low and lets us iterate quickly. Because we built it platform- and language-agnostic from the start, our path forward is partnering with youth organizations and schools across regions, and expanding to any messaging or social platform that supports the same OS-level text-selection integration we're already using.
+We didn't just design this — we built and shipped it. The current repository contains a native Kotlin Android app and a Python/FastAPI backend using Gemini. Text, article URLs, images/QR codes, and audio are handled through dedicated analysis endpoints. The Android debug build and local backend regression tests are part of our verification workflow. Hosting availability and real-device behavior are checked separately before a release. Because we built it platform- and language-agnostic from the start, our path forward is partnering with youth organizations and schools across regions, and expanding to any messaging or social platform that supports the same OS-level text-selection integration we're already using.

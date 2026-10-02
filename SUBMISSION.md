@@ -1,3 +1,6 @@
+> Arxiv eslatmasi: bu UNESCO/MIL taqdimoti oldingi yo‘nalishga tegishli.
+> Joriy mahsulot kiberfiribgarlik tahliliga o‘tdi; `CYBER_LOGIC.md` va README ga qarang.
+
 # UNESCO Youth Hackathon 2026 — Submission Materials
 
 ---
@@ -8,7 +11,7 @@
 Trust Signal
 
 **Brief introduction of your proposal (short version for the form):**
-We built Trust Signal, an AI-powered critical-thinking companion that helps young people evaluate suspicious messages, links, and posts on any social or messaging platform. Instead of issuing a risky true/false verdict — something no AI can honestly guarantee — it highlights the exact phrases in a message that use disinformation, manipulation, or phishing techniques, explains why in plain language, and teaches a transferable critical-thinking skill for next time. We shipped it as a web app and a native Android app integrated directly at the operating-system level (text-selection menu, share sheet, and a floating quick-access button), so it works inside whichever app someone is already in, on any platform, in any region.
+We built Trust Signal, an AI-powered critical-thinking companion that helps young people evaluate suspicious messages, links, and posts on any social or messaging platform. Instead of issuing a risky true/false verdict — something no AI can honestly guarantee — it highlights the exact phrases in a message that use disinformation, manipulation, or phishing techniques, explains why in plain language, and teaches a transferable critical-thinking skill for next time. The current prototype is a native Android app with a Python/FastAPI backend, integrated with the text-selection menu, share sheet, and a floating quick-access button in compatible Android apps.
 
 **Category:**
 B — Applications / Websites
@@ -47,6 +50,13 @@ The full text (first-person team voice, "we/our" throughout) lives in **`proposa
 
 ## 4. Still needed from you
 
-- Team member full names, ages, countries, and roles (blocking — needed for both the form's Team Information step and the proposal's Team Composition table)
+- Confirm the team details already listed above before submission.
 - ✅ Video pitch recorded and linked above — double-check the sharing permission in an incognito window before submitting
 - Final read-through of the proposal text above before exporting to Word/PDF
+
+## Current verification note
+
+The native Android/FastAPI architecture is documented in `ARCHITECTURE.md`.
+The `.docx`/`.pdf` exports and pitch video predate these code changes; refresh
+them from `proposal.md` before submitting. Automated checks do not replace
+real-device testing or live model-quality evaluation.

@@ -1,87 +1,75 @@
-# Trust Signal — Arxitektura hujjati (loyiha, tasdiqlanmagan)
+# Trust Signal — joriy arxitektura
 
-> Bu hujjat qaror emas — muhokama uchun. Har bir bo'limda variantlar keltirilgan,
-> siz kerakli variantni belgilab, izoh qoldirib, yoki butunlay boshqacha
-> yo'nalish yozib chiqishingiz mumkin.
+Joriy yo‘nalish: kiberfiribgarlik va raqamli aldov. Tafsilotlar `CYBER_LOGIC.md` da.
 
----
+## Oqim
 
-## 1. Hozirgi holat (2026-08-18 holatiga)
-
-```
-[Android ilova]
-   |
-   |-- WebView orqali yuklaydi --> https://unesco-cyan.vercel.app (Next.js)
-   |-- ACTION_PROCESS_TEXT / ACTION_SEND / Suzuvchi tugma --> shu saytga query param bilan yo'naltiradi
-   |
-[Vercel'da joylashgan Next.js ilova]
-   |
-   |-- /api/analyze route --> AI SDK (generateObject) --> OpenAI gpt-4o-mini
-       (hozirgina Vercel AI Gateway'dan to'g'ridan-to'g'ri OpenAI'ga
-        o'zgartirilgan — SIZNING TASDIG'INGIZSIZ, buni orqaga qaytarish
-        yoki saqlab qolish mumkin)
+```text
+Android MainActivity / BubbleService
+  → OkHttp, HTTPS JSON
+  → FastAPI RequestGuard (body, upload timeout, IP rate, concurrency)
+  → input/media validation
+  → [URL bo‘lsa: alohida fetch worker, SSRF himoyasi, 12s hard timeout]
+  → durable daily budget reservation
+  → Gemini (45s SDK timeout, 1 attempt, 4096 output tokens)
+  → deterministic URL/QR signals + severity-based risk policy
+  → AnalysisResultView (iqtiboslar, tekshirish qadamlari, warnings)
 ```
 
-**Muammo:** Android ilova hali ham Vercel'dagi saytga bog'liq — "faqat backend
-server almashtirish" sayt/WebView qatlamini olib tashlamaydi, faqat u qayerda
-joylashganini o'zgartiradi.
+## Android
 
----
+Kotlin, AppCompat, XML + dasturiy View, coroutines va OkHttp ishlatiladi.
+`ACTION_SEND` matn, image va audio qabul qiladi; `ACTION_PROCESS_TEXT`
+tanlangan matnni oladi. Foydalanuvchi yoqqan foreground service suzuvchi
+tugmani ushlab turadi. Karta fokus olganda clipboard o‘qiladi; tahlil
+avtomatik boshlanishi mumkin. So‘rov karta/activity lifecycle’i bilan
+bekor qilinadi. Server hisoblashining bekor bo‘lishi kafolatlanmaydi.
 
-## 2. Ochiq savol #1: Android ilova WebView orqali ishlaydimi, yoki to'liq native bo'ladimi?
+`AnalysisResultView` asosiy ekran va overlay uchun umumiy. Maqola/rasm/audio
+uchun `extractedText` ishlatiladi; QR yoki matnga mos kelmagan iqtibos signal
+kartasida ham ko‘rinadi. Havolalar avtomatik ochilmaydi. `warnings` kesilgan
+maqola yoki mavjud bo‘lmagan QR tekshiruvini bildiradi. Eski javoblarda bu
+maydon bo‘lmasa, Android bo‘sh ro‘yxat ishlatadi. Yangi Android `analysisVersion=cyber-v1` ni talab
+qiladi; eski backendni yangilash haqida tushunarli xabar chiqaradi.
 
-| Variant | Tavsif | Afzallik | Kamchilik |
-|---|---|---|---|
-| **A. WebView (hozirgi)** | Ilova saytni ko'rsatadi | Tez, bitta kod bazasi (web + android bir xil UI) | "Alohida ilova emas" degan tuyg'u yo'q, saytga bog'liq |
-| **B. To'liq native (Kotlin/Compose)** | UI butunlay Android'da qurilgan, faqat API chaqiriladi | Chinakam "native ilova" tuyg'usi, tezroq, offline UI | Butun UI qaytadan yozilishi kerak (bir necha kunlik ish) |
+## Backend modullari
 
-**Sizning belgingiz:** _______________
+- `app.py`: endpointlar, havola signallari va QR.
+- `cyber.py`: kiberfiribgarlik promptlari, kategoriyalar, javob sxemalari va
+  belgining jiddiyligiga asoslangan xavf baholash. `info` QR kuzatuvi xavf
+  darajasini oshirmaydi; bir dona `high` dalil yuqori xavf uchun yetarli.
+- `guards.py`: ASGI body/rate/concurrency himoyasi va SQLite kunlik kvotasi.
+- `article_fetch.py`: faqat ommaviy IP, 80/443 port, TLS host tekshiruvi,
+  IP-pinning va har redirectda qayta tekshiruv. 2MiB dan katta sahifa rad
+  qilinadi. DNS yoki sekin o‘qish qotib qolsa worker o‘ldiriladi va kutiladi.
+  Tahlil 6000 belgiga kesilsa, natijada bu haqda xabar beriladi.
+- `media.py`: haqiqiy rasm formati/piksel tekshiruvi; ffprobe bilan audio
+  turi va 5 daqiqalik davomiylik limiti. Tekshiruv mavjud bo‘lmasa audio
+  modelga yuborilmaydi.
 
----
+## Limitlar va joylashtirish
 
-## 3. Ochiq savol #2: Backend qayerda joylashadi?
+Standart qiymatlar: IP uchun 10 so‘rov/minut, bir vaqtda 4 tahlil, UTC kuniga
+500 model urinish. Rate/concurrency bitta jarayonga tegishli: **1 worker**.
+Ko‘p serverga o‘tishda umumiy Redis kabi limiter kerak; SQLite faqat bir
+saqlash yo‘lidan foydalanadigan jarayonlarda kunlik hisobni birlashtiradi.
 
-| Variant | Tavsif | Afzallik | Kamchilik |
-|---|---|---|---|
-| **A. Vercel (hozirgi)** | Joriy holat | Ishlab turibdi, hech narsa o'zgartirish shart emas | Siz "Vercel kerak emas" dedingiz |
-| **B. Render/Railway/Fly.io** | Boshqa bulut hosting | Vercel'ga bog'liq emas, bepul tarif bor | Yangi hisob, qayta deploy, domen o'zgaradi |
-| **C. O'z serverimiz (VPS)** | To'liq nazorat | Hech qanday uchinchi tomon platformasiga bog'liq emas | Sozlash, xavfsizlik, monitoring — hammasi qo'lda |
-| **D. Backend umuman yo'q, hammasi telefonda** | On-device AI | Serversiz, offline ishlaydi | Model zaifroq, ilova hajmi katta, faqat kuchli telefonlarda |
+Kunlik limit pul miqdori emas: model narxi va input hajmi xarajatni
+belgilaydi. Provayder hisobidagi billing cheklovini ham sozlash kerak.
+Muvaffaqiyatsiz model urinishlari ham hisoblanadi, avtomatik retry yo‘q.
+Ochiq anonim xizmatda distributed abuse’ni IP limiti butunlay to‘xtatmaydi.
+Hisob/session autentifikatsiyasi hozircha mahsulot oqimiga kiritilmagan;
+APK ichiga umumiy maxfiy kalit joylashtirilmaydi.
 
-**Sizning belgingiz:** _______________
+Backend internetga to‘g‘ridan-to‘g‘ri ochilmaydi; nginx ortida loopback’da
+ishlaydi. Proxy sozlamalari va ishga tushirish namunalari `backend/deploy/`.
+Default CORS bo‘sh: native Android CORS’ga bog‘liq emas. Brauzer mijoz
+qo‘shilsa origin’lar `.env` da aniq sanaladi.
 
----
+## Tekshiruv
 
-## 4. Ochiq savol #3: AI qanday ishlaydi?
-
-| Variant | Tavsif | Afzallik | Kamchilik |
-|---|---|---|---|
-| **A. Hozirgi: bulut LLM + system prompt** (GPT-4o-mini) | Umumiy modelga aniq ko'rsatma beriladi | Ishlab turibdi, tez qurildi, sifat yaxshi | "O'zimizniki" emas, uchinchi tomon API'siga bog'liq |
-| **B. Kuchliroq bulut model** (masalan GPT-4o, Claude) | Xuddi shu yondashuv, kattaroq model | Aniqlik oshishi mumkin | Xarajat oshadi |
-| **C. Ollama + kichik lokal model** | O'z serverimizda ochiq model ishga tushiriladi | Uchinchi tomon API'siga bog'liq emas | GPU/server kerak, kichik model zaifroq bo'lishi mumkin |
-| **D. RAG qo'shish** | Model firibgarlik URL bazasi kabi tashqi ma'lumotni qidiradi | Havolalarni haqiqiy bazadan tekshirish mumkin bo'ladi | Bizning asosiy vazifamiz (uslub tahlili) uchun unchalik foydasi yo'q, alohida baza kerak |
-| **E. O'z modelimizni o'qitish (LoRA)** | Maxsus dataset bilan fine-tuning | Nazariy jihatdan eng "bizniki" | Dataset yo'q, GPU kerak, haftalar/oylar vaqt |
-| **F. MCP orqali tashqi vositalar** | Modelga URL-tekshirish kabi real vositalar ulanadi | Real tekshiruv qo'shadi | Alohida vosita/API kerak, hozircha yo'q |
-
-**Sizning belgingiz:** _______________
-
----
-
-## 5. Nima uchun bu savollarni ajratdim
-
-"Backend" so'zi uchta mustaqil narsani anglatishi mumkin: (1) UI qayerda
-ishlaydi — telefonda yoki WebView'da, (2) server qayerda joylashgan, (3) AI
-qanday ishlaydi. Bu uchtasi bir-biriga bog'liq emas — masalan, backend'ni
-Vercel'dan Render'ga ko'chirish AI'ning qanday ishlashiga umuman ta'sir
-qilmaydi, va aksincha.
-
-Shuning uchun har birini alohida hal qilish kerak, "hammasini qayta quramiz"
-degan bitta katta qarordan ko'ra.
-
----
-
-## 6. Keyingi qadam
-
-Yuqoridagi uchta jadvalni to'ldirib bering (yoki qo'lda, yoki menga aytib) —
-shundan keyin men ANIQ o'sha yo'nalishda, boshqa hech narsani o'zgartirmasdan
-ishlayman.
+Backend testlari model/fetch javoblarini mock qiladi, SSRF, redirect,
+body/rate/budget, QR, provider failure va media validatsiyasini tekshiradi.
+ffprobe bilan real qisqa WAV ham sinovdan o‘tadi. Model sifati uchun kichik
+qo‘lda belgilangan fixturelar va opt-in eval runner alohida; ular keng
+miqyosdagi aniqlik isboti emas.

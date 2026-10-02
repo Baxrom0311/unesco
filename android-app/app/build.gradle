@@ -22,8 +22,8 @@ android {
         targetSdk 36
         // versionCode/versionName: bump both on every release build submitted to Play.
         // Convention: versionCode = YYMMDDN (date + same-day counter), versionName = semver.
-        versionCode 2608203
-        versionName "1.5.0"
+        versionCode 2609301
+        versionName "2.0.0"
     }
 
     signingConfigs {

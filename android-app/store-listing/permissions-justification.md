@@ -12,7 +12,7 @@ permission.
 > Messenger's "chat heads") that lets the user re-analyze text they just
 > copied — anywhere on the device — without switching apps. This is a core
 > feature of the app: instantly checking a suspicious message for
-> manipulation or phishing signals at the exact moment they encounter it, on
+> cyber-fraud and phishing signals at the exact moment they encounter it, on
 > any platform they're already using. The overlay is opt-in (off by default,
 > toggled from the app's main screen), shows a persistent notification while
 > active, can be dragged and repositioned, and can be turned off at any
@@ -24,7 +24,7 @@ permission.
 ## Why this permission is core, not incidental
 
 Trust Signal's entire value proposition is reducing the friction between
-"I see a suspicious message" and "I understand why it's suspicious." We
+"I see a suspicious message" and "I understand the risk and how to protect myself." We
 already offer two lower-friction entry points that do **not** need this
 permission:
 
@@ -46,10 +46,12 @@ duplicate feature.
 - **User control**: off by default; one tap in the app to enable/disable;
   draggable; a persistent low-priority notification is shown the entire
   time it's active, so its presence is never hidden from the user.
-- **Data handling**: the bubble reads the OS clipboard only at the instant
-  the user taps it — never continuously, never in the background — and only
-  to populate the analysis request. Full data flow:
-  https://unesco-cyan.vercel.app/privacy
+- **Data handling**: after the user opens the bubble card, it reads the OS clipboard
+  when the card gains focus (with a short retry if needed), or when the user
+  taps the paste button. If text is available, analysis can start automatically.
+  It does not continuously poll the clipboard. Content is sent over HTTPS to
+  our backend and then Gemini. Publish and verify an up-to-date privacy-policy
+  URL before store submission; the repository README documents the data flow.
 - **Minimal footprint**: the overlay is a single small icon; the expanded
   result card only appears after an explicit tap and can be dismissed
   instantly (✕ button or back button).
@@ -57,8 +59,7 @@ duplicate feature.
 ## Suggested supporting material for the review
 
 Play sometimes asks for a short demo video alongside the written
-justification. Reuse the existing `/demo` page (phone-mockup walkthrough)
-or record the real device flow: enable the bubble → copy a message in
+justification. Record the real device flow: enable the bubble → copy a message in
 another app → tap the bubble → see the analysis card → dismiss it.
 
 ## Related manifest declaration

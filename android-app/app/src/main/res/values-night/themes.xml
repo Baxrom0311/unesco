@@ -1,5 +1,5 @@
 <resources>
-    <style name="Theme.TrustSignal" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Base.Theme.TrustSignal" parent="Theme.AppCompat.DayNight.NoActionBar">
         <item name="android:windowBackground">@drawable/bg_app</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:navigationBarColor">@color/bgBottom</item>
@@ -7,6 +7,5 @@
         <item name="colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/textPrimary</item>
         <item name="android:textColorHighlight">#33888888</item>
-        <item name="android:forceDarkAllowed">false</item>
     </style>
 </resources>

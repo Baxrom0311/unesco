@@ -85,7 +85,12 @@ object AnalyzeApi {
                     ?: "Serverda xatolik yuz berdi ($code). Birozdan so'ng qayta urinib ko'ring."
                 AnalyzeOutcome.Failure(message)
             } else {
-                AnalyzeOutcome.Success(parseResult(text))
+                val obj = JSONObject(text)
+                if (obj.optString("analysisVersion") != "cyber-v1") {
+                    AnalyzeOutcome.Failure("Serverning kiberfiribgarlik tahlili hali yangilanmagan. Keyinroq qayta urining.")
+                } else {
+                    AnalyzeOutcome.Success(parseResult(text))
+                }
             }
         } catch (e: kotlin.coroutines.cancellation.CancellationException) {
             throw e
@@ -126,6 +131,11 @@ object AnalyzeApi {
 
     private fun parseResult(json: String): AnalyzeResult {
         val obj = JSONObject(json)
+        val riskLevel = obj.getString("riskLevel")
+        require(riskLevel in setOf("none", "suspicious", "high", "critical"))
+        fun strings(key: String): List<String> = obj.optJSONArray(key)?.let { array ->
+            (0 until array.length()).mapNotNull { array.optString(it).takeIf(String::isNotBlank) }
+        } ?: emptyList()
         val signalsArray = obj.optJSONArray("signals")
         val signals = buildList {
             if (signalsArray != null) {
@@ -135,7 +145,9 @@ object AnalyzeApi {
                         Signal(
                             technique = s.optString("technique"),
                             quote = s.optString("quote"),
-                            explanation = s.optString("explanation")
+                            explanation = s.optString("explanation"),
+                            category = s.optString("category", "other"),
+                            severity = s.optString("severity", "suspicious")
                         )
                     )
                 }
@@ -155,7 +167,14 @@ object AnalyzeApi {
             signals = signals,
             tip = obj.optString("tip"),
             extractedText = obj.optString("extractedText"),
-            checkSteps = steps
+            checkSteps = steps,
+            warnings = obj.optJSONArray("warnings")?.let { array ->
+                (0 until array.length()).mapNotNull { array.optString(it).takeIf(String::isNotBlank) }
+            } ?: emptyList(),
+            riskLevel = riskLevel,
+            riskTypes = strings("riskTypes"),
+            immediateActions = strings("immediateActions"),
+            recoverySteps = strings("recoverySteps")
         )
     }
 }

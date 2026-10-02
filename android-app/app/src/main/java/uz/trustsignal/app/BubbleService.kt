@@ -117,7 +117,7 @@ class BubbleService : Service() {
             this,
             1,
             notification,
-            ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
+            if (Build.VERSION.SDK_INT >= 34) ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE else 0
         )
     }
 
@@ -146,7 +146,11 @@ class BubbleService : Service() {
         bubbleParams.x = prefs.getInt("x", 0)
         bubbleParams.y = prefs.getInt("y", 300)
 
-        val bubble = ImageView(this)
+        val bubble = object : androidx.appcompat.widget.AppCompatImageView(this) {
+            override fun performClick(): Boolean = super.performClick()
+        }
+        bubble.contentDescription = getString(R.string.floating_button)
+        bubble.setOnClickListener { onBubbleTapped() }
         bubble.setImageResource(R.drawable.ic_bubble)
         bubble.elevation = 8f * density
         val sizePx = dp(56)
@@ -193,7 +197,6 @@ class BubbleService : Service() {
                     val elapsed = event.eventTime - event.downTime
                     if (event.action == MotionEvent.ACTION_UP && !dragging && elapsed < clickThresholdMs) {
                         v.performClick()
-                        onBubbleTapped()
                     } else if (dragging) {
                         prefs.edit().putInt("x", bubbleParams.x).putInt("y", bubbleParams.y).apply()
                     }
@@ -279,7 +282,7 @@ class BubbleService : Service() {
         header.orientation = LinearLayout.HORIZONTAL
         header.gravity = Gravity.CENTER_VERTICAL
         val title = TextView(this)
-        title.text = "Trust Signal"
+        title.text = getString(R.string.brand_name)
         title.textSize = 15f
         title.setTextColor(c(R.color.textPrimary))
         title.setTypeface(title.typeface, android.graphics.Typeface.BOLD)
@@ -289,6 +292,7 @@ class BubbleService : Service() {
         )
         val closeButton = ImageView(this)
         closeButton.setImageResource(R.drawable.ic_close)
+        closeButton.contentDescription = getString(R.string.close_card)
         closeButton.imageTintList = android.content.res.ColorStateList.valueOf(c(R.color.textSecondary))
         closeButton.setPadding(dp(7), dp(7), dp(7), dp(7))
         closeButton.background = glassBackground(
@@ -426,7 +430,7 @@ class BubbleService : Service() {
             when (outcome) {
                 is AnalyzeOutcome.Success -> {
                     val resultView = AnalysisResultView(this@BubbleService)
-                    resultView.render(text, outcome.result)
+                    resultView.render(outcome.result.extractedText.ifBlank { text }, outcome.result)
                     scroll.removeAllViews()
                     scroll.addView(resultView)
                 }
@@ -447,7 +451,7 @@ class BubbleService : Service() {
                     errorBox.addView(errorView)
 
                     val retry = Button(this@BubbleService)
-                    retry.text = "Qayta urinish"
+                    retry.text = getString(R.string.retry_action)
                     retry.setTextColor(c(R.color.accentFg))
                     retry.textSize = 13f
                     retry.stateListAnimator = null
@@ -481,7 +485,7 @@ class BubbleService : Service() {
         box.orientation = LinearLayout.VERTICAL
 
         val message = TextView(this)
-        message.text = "Nusxalangan matn topilmadi. Xabarni bosib turib «Nusxalash»ni tanlang — karta ochiq bo'lsa, o'zi tahlil boshlaydi. Yoki matnni shu yerga yozing/joylashtiring:"
+        message.text = getString(R.string.clipboard_empty_description)
         message.textSize = 13f
         message.setTextColor(c(R.color.textSecondary))
         message.setLineSpacing(dp(2).toFloat(), 1f)
@@ -513,7 +517,7 @@ class BubbleService : Service() {
         buttonRow.orientation = LinearLayout.HORIZONTAL
 
         val pasteButton = Button(this)
-        pasteButton.text = "Buferdan olish"
+        pasteButton.text = getString(R.string.paste_action)
         pasteButton.minimumHeight = dp(46)
         pasteButton.setTextColor(c(R.color.textPrimary))
         pasteButton.textSize = 13f
@@ -540,7 +544,7 @@ class BubbleService : Service() {
         )
 
         val analyze = Button(this)
-        analyze.text = "Tahlil qilish"
+        analyze.text = getString(R.string.analyze_action)
         analyze.setTextColor(c(R.color.accentFg))
         analyze.setTypeface(analyze.typeface, android.graphics.Typeface.BOLD)
         analyze.textSize = 13f

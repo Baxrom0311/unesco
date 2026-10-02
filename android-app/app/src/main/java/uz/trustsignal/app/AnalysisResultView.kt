@@ -63,7 +63,12 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
     fun render(content: String, result: AnalyzeResult) {
         removeAllViews()
 
-        addView(badge(result.cautionLevel))
+        addView(badge(result.riskLevel))
+        result.warnings.forEach { warning ->
+            addView(textView(warning, 13f, c(R.color.textSecondary)).apply {
+                setPadding(0, dp(8), 0, 0)
+            })
+        }
 
         addView(
             textView(result.summary, sizeSp = 15f, color = c(R.color.textPrimary), bold = true).apply {
@@ -72,8 +77,20 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
             }
         )
 
+        if (result.riskTypes.isNotEmpty()) {
+            addView(textView(result.riskTypes.joinToString(" · ") { threatLabel(it) }, 13f, c(R.color.textSecondary)).apply {
+                setPadding(0, dp(8), 0, 0)
+            })
+        }
+        if (result.immediateActions.isNotEmpty()) {
+            addView(checkStepsBox(result.immediateActions, context.getString(R.string.immediate_actions_title)))
+        }
+        if (result.recoverySteps.isNotEmpty()) {
+            addView(checkStepsBox(result.recoverySteps, context.getString(R.string.recovery_steps_title)))
+        }
+
         if (result.signals.isNotEmpty()) {
-            addView(sectionTitle("Matn ichida qayerda:"))
+            addView(sectionTitle(context.getString(R.string.evidence_title)))
             addView(
                 TextView(context).apply {
                     text = buildHighlightedSpannable(context, content, result.signals)
@@ -85,14 +102,14 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
                 }
             )
 
-            addView(sectionTitle("Topilgan belgilar:"))
+            addView(sectionTitle(context.getString(R.string.signals_title)))
             result.signals.forEachIndexed { i, signal ->
                 addView(signalCard(i + 1, signal))
             }
         } else {
             addView(
                 textView(
-                    "Aniq ishontirish/manipulyatsiya belgisi topilmadi. Baribir manbani mustaqil tekshiring.",
+                    context.getString(R.string.no_risk_signals),
                     sizeSp = 13f,
                     color = c(R.color.textSecondary)
                 ).apply { setPadding(0, dp(8), 0, 0) }
@@ -101,13 +118,16 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
 
         addView(tipBox(result.tip))
         if (result.checkSteps.isNotEmpty()) {
-            addView(checkStepsBox(result.checkSteps))
+            addView(checkStepsBox(result.checkSteps, context.getString(R.string.verification_title)))
         }
+        addView(textView(context.getString(R.string.analysis_limits), 12f, c(R.color.textTertiary)).apply {
+            setPadding(0, dp(12), 0, 0)
+        })
         addView(shareButton(result))
     }
 
-    /** SIFT uslubidagi "o'zingiz tekshiring" qadamlari. */
-    private fun checkStepsBox(steps: List<String>): View {
+    /** Himoya, tiklash va xavfsiz tekshirish qadamlari. */
+    private fun checkStepsBox(steps: List<String>, title: String): View {
         val container = LinearLayout(context).apply {
             orientation = VERTICAL
             background = box(c(R.color.fieldBg), 16)
@@ -117,7 +137,7 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
             layoutParams = lp
         }
         container.addView(
-            textView("O'zingiz tekshirish uchun qadamlar", sizeSp = 13f, color = c(R.color.textPrimary), bold = true).apply {
+            textView(title, sizeSp = 13f, color = c(R.color.textPrimary), bold = true).apply {
                 withIcon(R.drawable.ic_search_check, c(R.color.accent))
             }
         )
@@ -132,16 +152,33 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
         return container
     }
 
-    private fun badgeLabel(cautionLevel: String): String = when (cautionLevel) {
-        "belgi_topilmadi" -> "Aniq belgi topilmadi"
-        "kop_belgi" -> "Ko'plab ehtiyot belgisi bor"
-        else -> "Bir nechta ehtiyot belgisi bor"
-    }
+    private fun badgeLabel(riskLevel: String): String = context.getString(when (riskLevel) {
+        "none" -> R.string.risk_none
+        "suspicious" -> R.string.risk_suspicious
+        "high" -> R.string.risk_high
+        "critical" -> R.string.risk_critical
+        else -> R.string.risk_unknown
+    })
+
+    private fun threatLabel(category: String): String = context.getString(when (category) {
+        "phishing" -> R.string.threat_phishing
+        "impersonation" -> R.string.threat_impersonation
+        "payment_scam" -> R.string.threat_payment
+        "investment_scam" -> R.string.threat_investment
+        "account_takeover" -> R.string.threat_account
+        "malicious_software" -> R.string.threat_software
+        "extortion" -> R.string.threat_extortion
+        "shopping_scam" -> R.string.threat_shopping
+        "job_scam" -> R.string.threat_job
+        "romance_scam" -> R.string.threat_romance
+        "suspicious_link" -> R.string.threat_link
+        else -> R.string.threat_other
+    })
 
     /** Natijani guruh/suhbatga ogohlantirish sifatida ulashish tugmasi. */
     private fun shareButton(result: AnalyzeResult): View {
         val button = TextView(context).apply {
-            text = "Ogohlantirishni ulashish"
+            text = context.getString(R.string.share_warning_action)
             textSize = 13f
             setTypeface(typeface, android.graphics.Typeface.BOLD)
             setTextColor(c(R.color.textPrimary))
@@ -155,9 +192,10 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
         button.setOnClickListener {
             val message = buildString {
                 appendLine("Trust Signal tahlili")
-                appendLine("Natija: ${badgeLabel(result.cautionLevel)}")
+                appendLine("Natija: ${badgeLabel(result.riskLevel)}")
                 appendLine()
                 appendLine(result.summary)
+                result.warnings.forEach { appendLine(it) }
                 if (result.signals.isNotEmpty()) {
                     appendLine()
                     appendLine("Topilgan belgilar:")
@@ -167,9 +205,14 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
                     }
                 }
                 appendLine()
+                if (result.immediateActions.isNotEmpty()) {
+                    appendLine(context.getString(R.string.immediate_actions_title))
+                    result.immediateActions.forEachIndexed { index, step -> appendLine("${index + 1}. $step") }
+                    appendLine()
+                }
                 appendLine("💡 ${result.tip}")
                 appendLine()
-                append("(Trust Signal matn uslubini tahlil qiladi — bu fakt rost/yolg'onligi haqida hukm emas.)")
+                append(context.getString(R.string.analysis_limits))
             }
             val send = android.content.Intent(android.content.Intent.ACTION_SEND).apply {
                 type = "text/plain"
@@ -185,15 +228,15 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
         return button
     }
 
-    private fun badge(cautionLevel: String): TextView {
-        val label = badgeLabel(cautionLevel)
-        val (bg, fg) = when (cautionLevel) {
-            "belgi_topilmadi" -> c(R.color.badgeOkBg) to c(R.color.badgeOkFg)
-            "kop_belgi" -> c(R.color.badgeDangerBg) to c(R.color.badgeDangerFg)
+    private fun badge(riskLevel: String): TextView {
+        val label = badgeLabel(riskLevel)
+        val (bg, fg) = when (riskLevel) {
+            "none" -> c(R.color.fieldBg) to c(R.color.textSecondary)
+            "high", "critical" -> c(R.color.badgeDangerBg) to c(R.color.badgeDangerFg)
             else -> c(R.color.badgeWarnBg) to c(R.color.badgeWarnFg)
         }
         return TextView(context).apply {
-            text = "\u25CF  $label"
+            text = context.getString(R.string.caution_badge, label)
             textSize = 12f
             setTypeface(typeface, android.graphics.Typeface.BOLD)
             setTextColor(fg)
@@ -224,6 +267,14 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
                 withIcon(iconRes, iconTint, sizeDp = 16)
             }
         )
+        if (signal.quote.isNotBlank()) {
+            container.addView(textView(signal.quote, 13f, c(R.color.textPrimary)).apply {
+                setPadding(0, dp(6), 0, 0)
+                setTextIsSelectable(true)
+                // Display QR/URL text without auto-opening an untrusted link.
+                autoLinkMask = 0
+            })
+        }
         container.addView(
             textView(signal.explanation, sizeSp = 13f, color = c(R.color.textSecondary)).apply {
                 setPadding(0, dp(3), 0, 0)
@@ -242,7 +293,7 @@ class AnalysisResultView(context: Context) : LinearLayout(context) {
             lp.topMargin = dp(14)
             layoutParams = lp
         }
-        container.addView(textView("Keyingi safar uchun maslahat", sizeSp = 13f, color = c(R.color.textPrimary), bold = true).apply {
+        container.addView(textView(context.getString(R.string.prevention_title), sizeSp = 13f, color = c(R.color.textPrimary), bold = true).apply {
                 withIcon(R.drawable.ic_bulb, c(R.color.accent))
             })
         container.addView(

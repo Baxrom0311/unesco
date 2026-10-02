@@ -387,17 +387,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun hasOverlayPermission(): Boolean {
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            Settings.canDrawOverlays(this)
-        } else {
-            true
-        }
+        return Settings.canDrawOverlays(this)
     }
 
     private fun updateStatus() {
         if (!hasOverlayPermission()) {
-            statusText.text = "Holat: ruxsat kerak"
-            toggleBubbleButton.text = "Ruxsat berish"
+            statusText.text = getString(R.string.status_permission_needed)
+            toggleBubbleButton.text = getString(R.string.grant_permission_action)
             return
         }
         statusText.text = if (BubbleService.isRunning) {

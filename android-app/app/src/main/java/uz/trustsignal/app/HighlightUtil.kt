@@ -43,7 +43,6 @@ fun buildHighlightedSpannable(context: Context, source: String, signals: List<Si
     val phishFg = ContextCompat.getColor(context, R.color.hlPhishFg)
 
     val normSource = normalizeForMatch(source)
-    val normSourceLower = normSource.lowercase()
 
     // Har bir iqtibos uchun avval qabul qilingan diapazonlar bilan KESISHMAYDIGAN
     // birinchi uchrashuvni qidiramiz — shunda ikki signal bir xil iborani
@@ -56,18 +55,16 @@ fun buildHighlightedSpannable(context: Context, source: String, signals: List<Si
     for (signal in signals) {
         if (signal.quote.isBlank()) continue
         val normQuote = normalizeForMatch(signal.quote.trim())
-        val normQuoteLower = normQuote.lowercase()
 
         var start = normSource.indexOf(normQuote)
         var caseInsensitive = false
         if (start == -1) {
-            start = normSourceLower.indexOf(normQuoteLower)
+            start = normSource.indexOf(normQuote, ignoreCase = true)
             caseInsensitive = true
         }
-        val haystack = if (caseInsensitive) normSourceLower else normSource
-        val needle = if (caseInsensitive) normQuoteLower else normQuote
+        val needle = normQuote
         while (start != -1 && overlapsAccepted(start, start + needle.length)) {
-            start = haystack.indexOf(needle, start + 1)
+            start = normSource.indexOf(needle, start + 1, ignoreCase = caseInsensitive)
         }
         if (start == -1) continue
         nonOverlapping.add(Match(start, start + needle.length, signal.isPhishing))
